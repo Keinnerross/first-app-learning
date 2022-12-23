@@ -1,36 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions } from "react-native";
-import { Text, View, StyleSheet, Image, Pressable, Alert } from "react-native";
+
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const App = () => {
   const [clicks, setClicks] = useState(0);
   const [mode, setMode] = useState(5);
-  const [time, setTime] = useState(1000);
+  const [time, setTime] = useState(5000);
   const [isActive, setIsActive] = useState(false);
   const [timeId, setTimeId] = useState(0);
   const [toggleRest, setToggleRest] = useState(false);
-  const [cente, setCente] = useState(false);
-  let counter = 0;
-  const showPoint = () =>
-    Alert.alert("Alert Title", "My Alert Msg", [
-      {
-        text: "ok",
-        style: "cancel",
-      },
-    ]);
 
   useEffect(() => {
     let runningTimer = null;
 
     if (isActive) {
       runningTimer = setInterval(() => {
-        if (counter === 99) {
-          counter = 0;
-          setTime((time) => time - 1000);
-        } else {
-          counter++;
-          setCente(counter);
-        }
+        setTime((time) => time - 10);
       }, 10);
       setTimeId(runningTimer);
     } else {
@@ -39,11 +24,8 @@ const App = () => {
   }, [isActive]);
 
   useEffect(() => {
-    if (time == 0 && counter == 0) {
-      counter = 0;
-      setCente(counter);
+    if (time == 0) {
       setIsActive(false);
-      showPoint();
     }
   }, [time]);
 
@@ -53,7 +35,7 @@ const App = () => {
       setToggleRest(true);
     }
     if (time > 0) {
-      setClicks((clicks) => clicks + 1);
+      setClicks(clicks + 1);
     }
   };
 
@@ -70,10 +52,10 @@ const App = () => {
   };
 
   const showTime = (time) => {
-    const mil = parseInt((time % 1000) / 10);
     const sec = parseInt(time / 1000);
+    const mil = parseInt((time % 1000) / 10);
 
-    return `${sec < 10 ? "0" + sec : sec}:${cente < 10 ? "0" + cente : cente}`;
+    return `${sec < 10 ? "0" + sec : sec}:${mil < 10 ? "0" + mil : mil}`;
   };
 
   return (
@@ -92,83 +74,85 @@ const App = () => {
         </View>
       </View>
       {/* Clicker button*/}
-      <Pressable
+      <TouchableOpacity
         activeOpacity={false}
         style={styles.customButtonTap}
         onPress={() => clickStart()}
       >
         <Text style={styles.buttonClickText}>Start</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       {/*FooterControls */}
       <View style={styles.sectionContainer}>
         <View style={!toggleRest ? styles.timerContainer : styles.hidden}>
-          <Pressable
+          <TouchableOpacity
             style={styles.buttonModeTime}
             onPress={() => {
-              changeMode(1);
+              changeMode(5);
             }}
           >
             <Text style={styles.textButtonMode}>5s</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.buttonModeTime}
             onPress={() => {
               changeMode(10);
             }}
           >
             <Text style={styles.textButtonMode}>10s</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.buttonModeTime}
             onPress={() => {
               changeMode(30);
             }}
           >
             <Text style={styles.textButtonMode}>30s</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         {/*Rest Button */}
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             restClicker(mode);
           }}
           activeOpacity={false}
-          style={toggleRest ? styles.butonRest : styles.hidden}
+          style={toggleRest ? styles.infoContainer : styles.hidden}
         >
           <Text>Rest</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       {/*background */}
       <Image
-        source={require("./assets/images/col-1.png")}
+        source={require("./assets/images/Recurso 5.png")}
         style={styles.image1}
       />
       <Image
-        source={require("./assets/images/col-2.png")}
+        source={require("./assets/images/Recurso 6.png")}
         style={styles.image2}
       />
     </View>
   );
 };
-const { Height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
+    maxHeight: "100vh",
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#bc2632",
     gap: 15,
+    paddingVertical: "30px",
     // boxShadow: "inset 0 0 500px rgba(0, 0, 0, 0.2)",
   },
   infoContainer: {
     justifyContent: "center",
     alignItems: "center",
   },
-  title: { fontSize: 30, color: "white" },
+  title: { fontSize: "28px", color: "white" },
+  img: { height: "200px", width: "200px" },
   customButtonTap: {
     width: 300,
     height: 300,
@@ -181,12 +165,13 @@ const styles = StyleSheet.create({
   },
 
   buttonClickText: {
-    //   fontWeight: 800, {{{{Presenta Problemas}}}}
+    fontSize: 36,
+    fontWeight: 800,
     color: "#360815",
   },
   sectionContainer: {
-    height: 150,
-    minHeight: 120,
+    height: "10vh",
+    minHeight: "15vh",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -205,34 +190,29 @@ const styles = StyleSheet.create({
 
   textButtonMode: {
     color: "white",
-    fontSize: 16,
-    //   fontWeight: 600,
+    fontSize: "16px",
+    fontWeight: 600,
   },
   hidden: {
     display: "none",
   },
 
   image1: {
-    width: 350,
-    height: 350,
-    position: "absolute",
+    width: 300,
+    height: 300,
+    position: "fixed",
+    right: -190,
     bottom: 0,
-    right: -200,
-    zIndex: -1,
+    zIndex: -100,
   },
 
   image2: {
-    width: 200,
-    height: 250,
-    position: "absolute",
-    bottom: 0,
-    left: -70,
-    zIndex: -1,
-  },
-
-  butonRest: {
-    padding: 5,
-    backgroundColor: "blue",
+    width: 300,
+    height: 350,
+    position: "fixed",
+    left: -130,
+    bottom: -90,
+    zIndex: -100,
   },
 });
 
