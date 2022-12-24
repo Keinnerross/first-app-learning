@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions } from "react-native";
 import { Text, View, StyleSheet, Image, Pressable, Alert } from "react-native";
-
+/*Tengo un problema con los segundos, el segundero no cambia al empezar, eso está por corregír, a demás de eso algunos detalles responsive y listo, sería todo
+ */
 const App = () => {
   const [clicks, setClicks] = useState(0);
   const [mode, setMode] = useState(5);
-  const [time, setTime] = useState(1000);
+  const [time, setTime] = useState(5000);
   const [isActive, setIsActive] = useState(false);
   const [timeId, setTimeId] = useState(0);
   const [toggleRest, setToggleRest] = useState(false);
   const [cente, setCente] = useState(false);
   let counter = 0;
   const showPoint = () =>
-    Alert.alert("Alert Title", "My Alert Msg", [
+    Alert.alert("Puntaje", `${clicks}`, [
       {
         text: "ok",
         style: "cancel",
@@ -23,6 +24,9 @@ const App = () => {
     let runningTimer = null;
 
     if (isActive) {
+      if (time == mode * 1000) {
+        setTime((time) => time - 1000);
+      }
       runningTimer = setInterval(() => {
         if (counter === 99) {
           counter = 0;
@@ -106,7 +110,7 @@ const App = () => {
           <Pressable
             style={styles.buttonModeTime}
             onPress={() => {
-              changeMode(1);
+              changeMode(5);
             }}
           >
             <Text style={styles.textButtonMode}>5s</Text>
@@ -137,7 +141,7 @@ const App = () => {
           activeOpacity={false}
           style={toggleRest ? styles.butonRest : styles.hidden}
         >
-          <Text>Rest</Text>
+          <Text style={styles.title}>Rest</Text>
         </Pressable>
       </View>
 
@@ -157,6 +161,7 @@ const { Height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
+    height: Height,
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
@@ -168,7 +173,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: { fontSize: 30, color: "white" },
+  title: {
+    fontSize: 30,
+    color: "white",
+  },
   customButtonTap: {
     width: 300,
     height: 300,
@@ -181,19 +189,18 @@ const styles = StyleSheet.create({
   },
 
   buttonClickText: {
-    //   fontWeight: 800, {{{{Presenta Problemas}}}}
+    fontSize: 42,
     color: "#360815",
+    fontWeight: "700",
   },
   sectionContainer: {
-    height: 150,
     minHeight: 120,
     alignItems: "center",
-    justifyContent: "center",
+    marginTop: 25,
   },
 
   timerContainer: {
     flexDirection: "row",
-    gap: 20,
   },
 
   buttonModeTime: {
@@ -201,11 +208,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 50,
     backgroundColor: "#360815",
+    margin: 10,
   },
 
   textButtonMode: {
     color: "white",
     fontSize: 16,
+    justifyContent: "center",
     //   fontWeight: 600,
   },
   hidden: {
@@ -231,8 +240,12 @@ const styles = StyleSheet.create({
   },
 
   butonRest: {
+    width: 100,
     padding: 5,
-    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#360815",
+    borderRadius: 150,
   },
 });
 
