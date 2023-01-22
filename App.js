@@ -25,14 +25,16 @@ const App = () => {
 
     if (isActive) {
       if (time == mode * 1000) {
-        setTime((time) => time - 1000);
+        counter = 99;
+        setCente(counter);
       }
       runningTimer = setInterval(() => {
-        if (counter === 99) {
-          counter = 0;
+        if (counter == 0) {
           setTime((time) => time - 1000);
+          counter = 99;
+          setCente(counter);
         } else {
-          counter++;
+          counter--;
           setCente(counter);
         }
       }, 10);
@@ -74,10 +76,17 @@ const App = () => {
   };
 
   const showTime = (time) => {
-    const mil = parseInt((time % 1000) / 10);
-    const sec = parseInt(time / 1000);
-
-    return `${sec < 10 ? "0" + sec : sec}:${cente < 10 ? "0" + cente : cente}`;
+    let sec = parseInt(time / 1000);
+    if (time == 0) {
+      return `${sec < 10 ? "0" + sec : sec}:${
+        cente < 10 ? "0" + cente : cente
+      }`;
+    } else {
+      sec = sec - 1;
+      return `${sec < 10 ? "0" + sec : sec}:${
+        cente < 10 ? "0" + cente : cente
+      }`;
+    }
   };
 
   return (
